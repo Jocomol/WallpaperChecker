@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-from os import listdir, remove
+from os import listdir, remove, environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 from os.path import isfile, join, abspath
 import argparse
 import pygame
