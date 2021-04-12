@@ -23,9 +23,11 @@ def showImages(display, font, filePaths, images, maxIndex):
         display.fill((0,0,0))
         display.blit(images[index], (0, 0))    
         pygame.display.set_caption(filePaths[index])
-        display.blit(font.render(filePaths[index], False, (255, 255, 255)),(0,820))
-        for event in pygame.event.get() :
-            if event.type == pygame.QUIT :
+        text_width, text_height = font.size(filePaths[index])
+        pygame.draw.rect(display, (0,0,0), pygame.Rect(0, 0, text_width + 10, text_height + 10))
+        display.blit(font.render(filePaths[index], True, (255, 255, 255)),(5,5))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
                 pygame.quit()
                 quit()                    
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_y:
@@ -46,10 +48,9 @@ def main():
     pygame.display.set_caption("loading...")
     display_width = 1920 
     display_height = 1080
-    font = pygame.font.SysFont('Arial', 20)
+    font = pygame.font.SysFont(None, 40)
     display = pygame.display.set_mode((display_width,display_height))
     filePaths, images, maxIndex = loadImages(abspath(args.path[0]), display_width, display_height)
-    
     showImages(display, font, filePaths, images, maxIndex)
 
 if __name__ == "__main__":
