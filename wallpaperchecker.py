@@ -17,12 +17,13 @@ def loadImages(absDirectoryPath, width, height):
             images.append(pygame.transform.scale(pygame.image.load(filePath), (width, height)))
     return filePaths, images, len(filePaths) -1
 
-def showImages(display, filePaths, images, maxIndex):
+def showImages(display, font, filePaths, images, maxIndex):
     index=0
     while index <= maxIndex: 
         display.fill((0,0,0))
         display.blit(images[index], (0, 0))    
-        pygame.display.set_caption(filePaths[index]) 
+        pygame.display.set_caption(filePaths[index])
+        display.blit(font.render(filePaths[index], False, (255, 255, 255)),(0,820))
         for event in pygame.event.get() :
             if event.type == pygame.QUIT :
                 pygame.quit()
@@ -45,10 +46,11 @@ def main():
     pygame.display.set_caption("loading...")
     display_width = 1920 
     display_height = 1080
+    font = pygame.font.SysFont('Arial', 20)
     display = pygame.display.set_mode((display_width,display_height))
     filePaths, images, maxIndex = loadImages(abspath(args.path[0]), display_width, display_height)
     
-    showImages(display, filePaths, images, maxIndex)
+    showImages(display, font, filePaths, images, maxIndex)
 
 if __name__ == "__main__":
     main()
