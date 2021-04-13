@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from os import listdir, remove, environ
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-from os.path import isfile, join, abspath
+from os.path import isfile, join, abspath, isdir
 import argparse
 import pygame
 from PIL import Image
@@ -77,12 +77,17 @@ class Picture:
         for text in self.texts:
             text.render(display)
 
-def loadPictures(absDirectoryPath, width, height):
+def loadPictures(paths, width, height):
     pictures = []
-    for item in listdir(absDirectoryPath): ##TODO Support * and list of images
-        filePath = join(absDirectoryPath, item)
-        if isfile(filePath):
-            pictures.append(Picture(filePath, width, height))
+    for path in paths:
+        path = abspath(path)
+        if isdir(path):
+            for item in listdir(path):
+                filePath = join(path, item)
+                if isfile(filePath):
+                    pictures.append(Picture(filePath, width, height))
+        elif isfile(path):
+            pictures.append(Picture(path, width, height))
     return pictures
 
 def showPictures(display, font, pictures):
@@ -114,7 +119,7 @@ def main():
     display_height = 1080
     font = pygame.font.SysFont(None, 40)
     display = pygame.display.set_mode((display_width,display_height))
-    pictures = loadPictures(abspath(args.path[0]), display_width, display_height)
+    pictures = loadPictures(args.path, display_width, display_height)
     showPictures(display, font, pictures)
 
 if __name__ == "__main__":
