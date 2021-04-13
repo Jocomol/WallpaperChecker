@@ -29,13 +29,12 @@ class Text:
         display.blit(self.font.render(self.text, True, self.color),(5,5 + self.y_cord))
 
 class Picture:
-    #TODO Counter 1/100
-    def __init__(self, path, width, height):
+    def __init__(self, path, width, height, max_index, index):
         self.path = path
         self.width = width
         self.height = height
         self.image = pygame.transform.scale(pygame.image.load(self.path), (self.width, self.height))
-        self.texts = self.textFactory(self.path)
+        self.texts = self.textFactory(self.path, max_index, index)
          
     def draw(self, display, font):
         display.fill((0,0,0))
@@ -47,13 +46,14 @@ class Picture:
         remove(self.path)
         print("file",self.path,"deleted")
     
-    def textFactory(self, path):
+    def textFactory(self, path, max_index, index):
         texts = []
         img = Image.open(path)     
         color = self.calAspectRatio(img)
         texts.append(Text(img.format))
         texts.append(Text(str(img.width) + "x" + str(img.height),color))
         texts.append(Text(img.mode))
+        texts.append(Text(str(index) + "/" + str(max_index)))
         return texts
     
     def calAspectRatio(self, img):
@@ -79,15 +79,18 @@ class Picture:
 
 def loadPictures(paths, width, height):
     pictures = []
+    picture_paths = []
     for path in paths:
         path = abspath(path)
         if isdir(path):
             for item in listdir(path):
                 filePath = join(path, item)
                 if isfile(filePath):
-                    pictures.append(Picture(filePath, width, height))
+                    picture_paths.append(filePath)
         elif isfile(path):
-            pictures.append(Picture(path, width, height))
+            picture_paths.append(path)
+    for path in picture_paths:
+        pictures.append(Picture(path, width, height,len(picture_paths),len(pictures)+1))
     return pictures
 
 def showPictures(display, font, pictures):
