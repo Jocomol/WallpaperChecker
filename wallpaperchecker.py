@@ -7,8 +7,8 @@ import pygame
 from PIL import Image
 
 
-parser = argparse.ArgumentParser(description="WIP")  # TODO Description
-parser.add_argument("path", metavar="path", type=str, nargs="+", help="path to directory containting pictures")
+parser = argparse.ArgumentParser(description="A script that shows you all pictures and lets you delete them.")
+parser.add_argument("path", metavar="path", type=str, nargs="+", help="path to directory containting pictures or multiple files")
 
 
 class Text:
