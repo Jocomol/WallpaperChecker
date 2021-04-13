@@ -12,10 +12,11 @@ parser.add_argument("path", metavar="path", type=str, nargs="+", help="path to d
 
 class Text:
     
-    def __init__(self, text):
+    def __init__(self, text, color=(255,255,255)):
         self.text = text
         self.width = 0
         self.height = 0
+        self.color = color
     
     def setFont(self, font):
         self.font = font
@@ -25,17 +26,17 @@ class Text:
         self.y_cord = y_cord   
     
     def render(self, display):
-        display.blit(self.font.render(self.text, True, (255, 255, 255)),(5,5 + self.y_cord))
+        display.blit(self.font.render(self.text, True, self.color),(5,5 + self.y_cord))
 
 class Picture:
-
+    #TODO Counter 1/100
     def __init__(self, path, width, height):
         self.path = path
         self.width = width
         self.height = height
         self.image = pygame.transform.scale(pygame.image.load(self.path), (self.width, self.height))
-        self.texts = self.textFactory(path)
-    
+        self.texts = self.textFactory(self.path)
+         
     def draw(self, display, font):
         display.fill((0,0,0))
         pygame.display.set_caption(self.path)
@@ -47,12 +48,21 @@ class Picture:
         print("file",self.path,"deleted")
     
     def textFactory(self, path):
-        img = Image.open(path)     
         texts = []
+        img = Image.open(path)     
+        color = self.calAspectRatio(img)
         texts.append(Text(img.format))
-        texts.append(Text(str(img.width) + "x" + str(img.height))) #TODO Aspect Ratio with corresponding color
+        texts.append(Text(str(img.width) + "x" + str(img.height),color))
         texts.append(Text(img.mode))
         return texts
+    
+    def calAspectRatio(self, img):
+        ratio_difference = abs(16/9 - img.width / img.height)
+        if ratio_difference <= (2.5 * 0.18):
+            return (0,255,0)
+        else:
+            return (255,0,0)
+
 
     def renderText(self, font, display):
         max_width = 0
